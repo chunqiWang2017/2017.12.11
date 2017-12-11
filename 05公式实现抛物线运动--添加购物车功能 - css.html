@@ -1,0 +1,113 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <title>购物车</title>  
+    <style>  
+    	*{
+    		margin:0;
+    		padding:0;
+    	}
+        #addToCart {  
+            position: fixed;  
+            left: 600px;  
+            cursor: pointer;  
+            width: 100px;  
+            height: 40px;  
+            line-height: 40px;  
+            border: 1px solid deeppink;  
+            text-align: center;  
+            color: deeppink;  
+            top:500px;
+        }  
+        #addToCart:hover {  
+            color: #fff;  
+            background-color: deeppink;  
+        }  
+  
+        #shopCart {  
+            position: fixed;  
+            right: 0;  
+            top: 200px;  
+            color: red;  
+        }  
+        #shopNum{
+        	width: 60px;
+        	height: 25px;
+        	background: deeppink;
+        	color:black;
+        	text-align: center;
+        	line-he0ight: 25px;
+        }
+    </style>
+	<body>
+		<div id="addToCart">  
+		   添加到购物车  
+		</div>  	
+		<div id="shopCart">  
+		    购物车  
+		  <p id="shopNum"></p>
+		</div>
+	</body>
+</html>  
+<script src="../public.js"></script>
+<script type="text/javascript">
+ 	//确定三点坐标
+ 	//确定抛物线方程的系数  根据坐标确定抛物线方程
+ 	//创建商品
+ 	// 商品运动 （沿着抛物线轨迹运动）
+ 	var sum = 0;
+ 	$("addToCart").onclick = function(){
+ 		//起点
+ 		var startPoint = {
+ 			x : $("addToCart").offsetLeft + $("addToCart").offsetWidth/2,
+ 			y : $("addToCart").offsetTop
+ 		}
+ 		//终点
+ 		var endPoint = {
+ 			x : $("shopCart").offsetLeft + $("shopCart").offsetWidth/2,
+ 			y : $("shopCart").offsetTop
+ 		}
+ 		//最高点
+ 		var topPoint = {
+ 			x : endPoint.x - 150,
+ 			y : endPoint.y - 100
+ 		}
+ 		
+ 		//根据三点坐标确定抛物线的系数
+		var a = ((startPoint.y - endPoint.y) * (startPoint.x - topPoint.x) - (startPoint.y - topPoint.y) * (startPoint.x - endPoint.x)) / ((startPoint.x * startPoint.x - endPoint.x * endPoint.x) * (startPoint.x - topPoint.x)-(startPoint.x * startPoint.x - topPoint.x * topPoint.x) * (startPoint.x - endPoint.x));  
+				
+		var b = ((endPoint.y - startPoint.y) - a * (endPoint.x * endPoint.x - startPoint.x * startPoint.x)) / (endPoint.x - startPoint.x);  
+				
+		var c = startPoint.y - a * startPoint.x * startPoint.x - b * startPoint.x;
+ 		
+ 		
+ 		//创建商品
+ 		var x = startPoint.x;//商品的初始横坐标
+ 		var y = startPoint.y;//商品的初始纵坐标
+ 		var good = create("div");
+ 		good.style.width = good.style.height = "30px";
+ 		document.body.appendChild(good);
+ 		good.style.background = "blue";
+ 		good.style.position = "absolute";
+ 		good.style.left = x + "px";
+ 		good.style.top = y + "px";
+ 		
+ 		//商品运动  y = a*x*x + b*x + c
+ 		var timer = null;
+ 		timer = setInterval(function(){
+ 			x = x + 5 ;//改变商品的横向速度
+ 			y =  a*x*x + b*x + c; //根据抛物线方程 得到y的值
+ 			if( x < endPoint.x ){
+	 			good.style.left = x + "px";
+	 			good.style.top = y + "px";
+ 			}else{
+ 				clearInterval(timer);
+ 				good.remove();
+ 				$("shopNum").innerHTML = ++ sum;
+ 			}
+ 		},10)
+ 			
+ 	}
+</script>
+
